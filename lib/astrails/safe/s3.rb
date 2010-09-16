@@ -43,16 +43,11 @@ module Astrails
         return unless keep = @config[:keep, :s3]
 
         puts "listing files: #{bucket}:#{base}*" if $_VERBOSE
-        files = AWS::S3::Bucket.objects(bucket, :prefix => base, :max_keys => keep * 2)
+        files = AWS::S3::Bucket.objects(bucket, :prefix => base, :max_keys => keep * 2).sort{|a,b| a.key <=> b.key}
         puts files.collect {|x| x.key} if $_VERBOSE
-
-        files = files.
-          collect {|x| x.key}.
-          sort
-
         cleanup_with_limit(files, keep) do |f|
-          puts "removing s3 file #{bucket}:#{f}" if $DRY_RUN || $_VERBOSE
-          AWS::S3::Bucket.find(bucket)[f].delete unless $DRY_RUN || $LOCAL
+          puts "removing s3 file #{bucket}:#{f.key}" if $DRY_RUN || $_VERBOSE
+          f.delete unless $DRY_RUN || $LOCAL
         end
       end
 

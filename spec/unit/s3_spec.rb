@@ -50,8 +50,11 @@ describe Astrails::Safe::S3 do
     end
 
     it "should delete extra files" do
-      mock(AWS::S3::Bucket).find("_bucket").mock!["aaaaa1"].mock!.delete
-      mock(AWS::S3::Bucket).find("_bucket").mock!["aaaaa2"].mock!.delete
+      sorted_files = @files.sort{|a,b| a.key <=> b.key}
+      mock(sorted_files[0]).delete.once
+      mock(sorted_files[1]).delete.once
+      mock(sorted_files[2]).delete.never
+      mock(sorted_files[3]).delete.never
       @s3.send :cleanup
     end
 
