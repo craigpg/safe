@@ -17,7 +17,7 @@ DESC
     gem.files = FileList["[A-Z]*.*", "{bin,examples,generators,lib,rails,spec,test,templates}/**/*", 'Rakefile', 'LICENSE*']
 
     gem.add_dependency("aws-s3")
-    gem.add_dependency("cloudfiles")
+    gem.add_dependency("cloudfiles", ">= 1.4.8")
     gem.add_dependency("net-sftp")
 
     gem.add_development_dependency "rspec"
